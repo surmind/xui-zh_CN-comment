@@ -14,14 +14,9 @@ To get the full source you need  _Git_:
     $ cd xui
     $ git submodule init
     $ git submodule update
+    $ make
 
-To build xui, you will need _Ruby_, and if minifying, _Java_ as well:
-
-    $ ./build                 # Generates lib/xui.js
-    $ ./build profile=bb      # Builds xui for BlackBerry 4/5 browsers (uses Sizzle selector engine)
-    $ ./build profile=ie      # Builds xui for Internet Explorer
-    $ ./build --minify        # Builds xui and minifies (Java required)
-    $ ./build --cat=path/f.js # Builds xui and appends the contents of f.js to the built files under lib/
+The xui build requires _Ruby_ and _Java_. 
 
 Generating Documentation
 ------------------------
@@ -30,7 +25,7 @@ The documentation is generated from the inline comments in the source-code. [joD
 
 To generate the documentation, you will need _Ruby_, _Perl_, and _Git_:
 
-    ./build --generate-docs
+    $ make doc
 
 Source Tree
 -----------
@@ -71,33 +66,12 @@ Source Tree
      |
      '-util ..................... Utils for minification, obfuscation, verification
 
-Creators
---------
-
-- http://github.com/brianleroux
-- http://github.com/silentrob
-- http://github.com/sintaxi
-
-
-Contributors
-------------
-
-- http://github.com/rmurphey 
-- http://github.com/remy
-- http://github.com/filmaj
-- http://github.com/alunny
-- http://github.com/gdagley
-- http://github.com/slexaxton
-- http://github.com/cluster
-- http://github.com/joemccann
-- http://github.com/mwbrooks
-
 (If we missed you, please let us know!)
 
 License
 -------
 
-_Copyright (c) 2008, 2009, 2010 Brian LeRoux, Brock Whitten, Rob Ellis_
+_Copyright (c) 2008, 2009, 2010 xui contributers_
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

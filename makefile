@@ -13,7 +13,6 @@ version:
 	sed -i "" 's/$(OLD_VERSION)/$(VERSION)/' ./spec/index.html
 	sed -i "" 's/$(OLD_VERSION)/$(VERSION)/' ./spec/index-ie.html
 	sed -i "" 's/$(OLD_VERSION)/$(VERSION)/' ./spec/index-bb.html
-	echo $(VERSION) > ./VERSION
 
 build:
 	./util/build profile=core --minify

@@ -59,7 +59,7 @@ if minify
 end
 
 if docs
-  PREFIX    = File.expand_path(File.dirname(__FILE__))
+  PREFIX    = File.join(File.expand_path(File.dirname(__FILE__)), '..')
   DOC_DIR   = File.join(PREFIX,    'doc')
   PKG_DIR   = File.join(PREFIX,    'packages')
   SRC_DIR   = File.join(PREFIX,    'src')
