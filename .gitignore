@@ -8,5 +8,7 @@ lib/*
 *.rpmorig
 *.rpmsave
 *.rej
+Session.vim
+tags
 Thumbs.db
 packages/jodoc
