@@ -62,15 +62,15 @@ xui.fn = xui.prototype = {
 
 	Extends XUI's prototype with the members of another object.
 
-	### syntax ###
+	### 语法 ###
 
 		xui.extend( object );
 
-	### arguments ###
+	### 参数 ###
 
 	- object `Object` contains the members that will be added to XUI's prototype.
  
-	### example ###
+	### 例子 ###
 
 	Given:
 
@@ -100,16 +100,16 @@ xui.fn = xui.prototype = {
 
 	Find the elements that match a query string. `x$` is an alias for `find`.
 
-	### syntax ###
+	### 语法 ###
 
 		x$( window ).find( selector, context );
 
-	### arguments ###
+	### 参数 ###
 
 	- selector `String` is a CSS selector that will query for elements.
 	- context `HTMLElement` is the parent element to search from _(optional)_.
  
-	### example ###
+	### 例子 ###
 
 	Given the following markup:
 
@@ -183,7 +183,7 @@ xui.fn = xui.prototype = {
 
 	Sets the objects in the xui collection.
 
-	### syntax ###
+	### 语法 ###
 
 		x$( window ).set( array );
 */
@@ -201,11 +201,11 @@ xui.fn = xui.prototype = {
 
 	Reduces the set of elements in the xui object to a unique set.
 
-	### syntax ###
+	### 语法 ###
 
 		x$( window ).reduce( elements, index );
 
-	### arguments ###
+	### 参数 ###
 
 	- elements `Array` is an array of elements to reduce _(optional)_.
 	- index `Number` is the last array index to include in the reduction. If unspecified, it will reduce all elements _(optional)_.
@@ -228,15 +228,15 @@ xui.fn = xui.prototype = {
 
 	Returns the elements that match a given CSS selector.
 
-	### syntax ###
+	### 语法 ###
 
 		x$( window ).has( selector );
 
-	### arguments ###
+	### 参数 ###
 
 	- selector `String` is a CSS selector that will match all children of the xui collection.
 
-	### example ###
+	### 例子 ###
 
 	Given:
 
@@ -268,13 +268,13 @@ xui.fn = xui.prototype = {
 
 	Extend XUI with custom filters. This is an interal utility function, but is also useful to developers.
 
-	### syntax ###
+	### 语法 ###
 
 		x$( window ).filter( fn );
 
-	### arguments ###
+	### 参数 ###
 
-	- fn `Function` is called for each element in the XUI collection.
+	- fn `函数` is called for each element in the XUI collection.
 
 	        // `index` is the array index of the current element
 	        function( index ) {
@@ -282,7 +282,7 @@ xui.fn = xui.prototype = {
 	            // return true to add element to new XUI collection
 	        }
 
-	### example ###
+	### 例子 ###
 
 	Filter all the `<input />` elements that are disabled:
 
@@ -303,15 +303,15 @@ xui.fn = xui.prototype = {
 
 	The opposite of `has`. It modifies the elements and returns all of the elements that do __not__ match a CSS query.
 
-	### syntax ###
+	### 语法 ###
 
 		x$( window ).not( selector );
 
-	### arguments ###
+	### 参数 ###
 
 	- selector `String` a CSS selector for the elements that should __not__ be matched.
 
-	### example ###
+	### 例子 ###
 
 	Given:
 
@@ -342,24 +342,24 @@ xui.fn = xui.prototype = {
 	each
 	----
 
-	Element iterator for an XUI collection.
+    对XUI集合中的元素进行迭代操作
 
-	### syntax ###
+	### 语法 ###
 
 		x$( window ).each( fn )
 
-	### arguments ###
+	### 参数 ###
 
-	- fn `Function` callback that is called once for each element.
+	- fn `函数` 回调函数，每个元素对其进行一次调用
 
-		    // `element` is the current element
-		    // `index` is the element index in the XUI collection
-		    // `xui` is the XUI collection.
+		    // `element` 当前元素
+		    // `index` 当前元素在XUI集合中的序号
+		    // `xui` XUI集合
 		    function( element, index, xui ) {
-		        // `this` is the current element
+		        // `this` 当前元素
 		    }
 
-	### example ###
+	### 例子 ###
 
 		x$('div').each(function(element, index, xui) {
 		    alert("Here's the " + index + " element: " + element);
@@ -367,7 +367,7 @@ xui.fn = xui.prototype = {
 */
     each: function(fn) {
         // we could compress this by using [].forEach.call - but we wouldn't be able to support
-        // fn return false breaking the loop, a feature I quite like.
+        // fn 返回 false 时终止循环，这是一个我非常喜欢的特性
         for (var i = 0, len = this.length; i < len; ++i) {
             if (fn.call(this[i], this[i], i, this) === false)
             break;
