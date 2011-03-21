@@ -40,7 +40,7 @@ xui-zh_CN-comment是一个基于xui的翻译项目，致力于将xui中的注释
      |-packages ................. xui使用的第三方库(gitsubmodules)
      | |-qunit ..................   - 超棒的异步测试库，由John Resig开发
      | |-emile ..................   - 神奇的小型动画库，由Thomas Fuchs开发
-     | |-sizzle .................   - 用于jQuery的超赞的选择器引擎，由by John Resig开发
+     | |-sizzle .................   - 用于jQuery的超赞的选择器引擎，由John Resig开发
      | '-split.js ...............   - 重写IE的表现糟糕的String.split
      |
      |-spec ..................... 特别的：
