@@ -60,7 +60,7 @@ xui.fn = xui.prototype = {
 	extend
 	------
 
-	Extends XUI's prototype with the members of another object.
+	用另一个对象的成员来扩展XUI的原型。
 
 	### 语法 ###
 
@@ -68,22 +68,22 @@ xui.fn = xui.prototype = {
 
 	### 参数 ###
 
-	- object `Object` contains the members that will be added to XUI's prototype.
+	- object `对象` 包含了一些成员，这些成员被添加到XUI的原型。
  
 	### 例子 ###
 
-	Given:
+	设有如下代码:
 
 		var sugar = {
 		    first: function() { return this[0]; },
 		    last:  function() { return this[this.length - 1]; }
 		}
 
-	We can extend xui's prototype with members of `sugar` by using `extend`:
+    我们可以用`extend`将`sugar`中的成员扩展到xui的原型中：
 
 		xui.extend(sugar);
 
-	Now we can use `first` and `last` in all instances of xui:
+    然后我们就可以在所有的xui实例中使用`first`和`last`
 
 		var f = x$('.button').first();
 		var l = x$('.notice').last();
@@ -106,7 +106,7 @@ xui.fn = xui.prototype = {
 
 	### 参数 ###
 
-	- selector `String` is a CSS selector that will query for elements.
+	- selector `字符串` is a CSS selector that will query for elements.
 	- context `HTMLElement` is the parent element to search from _(optional)_.
  
 	### 例子 ###
@@ -226,7 +226,7 @@ xui.fn = xui.prototype = {
 	has
 	---
 
-	Returns the elements that match a given CSS selector.
+    返回能与指定的CSS选择器匹配的元素
 
 	### 语法 ###
 
@@ -234,21 +234,21 @@ xui.fn = xui.prototype = {
 
 	### 参数 ###
 
-	- selector `String` is a CSS selector that will match all children of the xui collection.
+	- selector `字符串` 一个CSS选择器，用来和xui集中的所有子元素进行匹配。
 
 	### 例子 ###
 
-	Given:
+	设有如下代码:
 
 		<div>
 		    <div class="round">Item one</div>
 		    <div class="round">Item two</div>
 		</div>
 	
-	We can use `has` to select specific objects:
+	我们可以使用`has`选择指定的对象：
 
-		var divs    = x$('div');          // got all three divs.
-		var rounded = divs.has('.round'); // got two divs with the class .round
+		var divs    = x$('div');          // 获取全部的三个div
+		var rounded = divs.has('.round'); // 获取那两个 class="round" 的div
 */
      has: function(q) {
          var list = xui(q);
@@ -309,11 +309,11 @@ xui.fn = xui.prototype = {
 
 	### 参数 ###
 
-	- selector `String` a CSS selector for the elements that should __not__ be matched.
+	- selector `字符串` a CSS selector for the elements that should __not__ be matched.
 
 	### 例子 ###
 
-	Given:
+	设有如下代码:
 
 		<div>
 		    <div class="round">Item one</div>
