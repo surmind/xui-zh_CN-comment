@@ -2,16 +2,15 @@
 	Basics
 	======
     
-    xui is available as the global `x$` function. It accepts a CSS selector string or DOM element, or an array of a mix of these, as parameters,
-    and returns the xui object. For example:
+    xui以全局函数`x$`供使用。该函数能以CSS选择器字符串、DOM元素、或是包含了它们的数组作为参数，
+    并返回xui对象。例如：
     
-        var header = x$('#header'); // returns the element with id attribute equal to "header".
+        var header = x$('#header'); // 返回id='header'的元素。
         
-    For more information on CSS selectors, see the [W3C specification](http://www.w3.org/TR/CSS2/selector.html). Please note that there are
-    different levels of CSS selector support (Levels 1, 2 and 3) and different browsers support each to different degrees. Be warned!
+    如果需要更多关于CSS选择器的信息， 请访问[W3C specification](http://www.w3.org/TR/CSS2/selector.html)。请注意有不同级别的CSS选择器(Levels 1, 2 和 3)
+    不同浏览器对它们有不同程度的支持。千万要注意！
     
-	The functions described in the docs are available on the xui object and often manipulate or retrieve information about the elements in the
-	xui collection.
+	本文档中所描述的函数都是xui对象中的，并且通常情况下以xui集的形式操作或获取元素的信息。
 
 */
 var undefined,
@@ -21,7 +20,7 @@ var undefined,
     document   = window.document,      // obvious really
     simpleExpr = /^#?([\w-]+)$/,   // for situations of dire need. Symbian and the such        
     idExpr     = /^#/,
-    tagExpr    = /<([\w:]+)/, // so you can create elements on the fly a la x$('<img href="/foo" /><strong>yay</strong>')
+    tagExpr    = /<([\w:]+)/, // 如此一来你就能即时地创建元素，通过类似 x$('<img href="/foo" /><strong>yay</strong>') 的方式
     slice      = function (e) { return [].slice.call(e, 0); };
     try { var a = slice(document.documentElement.childNodes)[0].nodeType; }
     catch(e){ slice = function (e) { var ret=[]; for (var i=0; e[i]; i++) ret.push(e[i]); return ret; }; }
@@ -30,7 +29,7 @@ window.x$ = window.xui = xui = function(q, context) {
     return new xui.fn.find(q, context);
 };
 
-// patch in forEach to help get the size down a little and avoid over the top currying on event.js and dom.js (shortcuts)
+// 引入forEach以助于减少代码量 and avoid over the top currying on event.js and dom.js (shortcuts)
 if (! [].forEach) {
     Array.prototype.forEach = function(fn) {
         var len = this.length || 0,
@@ -46,7 +45,7 @@ if (! [].forEach) {
     };
 }
 /*
- * Array Remove - By John Resig (MIT Licensed) 
+ * 移除数组中的元素 - By John Resig (MIT Licensed) 
  */
 function removex(array, from, to) {
     var rest = array.slice((to || from) + 1 || array.length);
@@ -98,7 +97,7 @@ xui.fn = xui.prototype = {
 	find
 	----
 
-	Find the elements that match a query string. `x$` is an alias for `find`.
+	找出和指定选择器匹配的元素。`x$`是`find`的一个别名。
 
 	### 语法 ###
 
@@ -106,12 +105,12 @@ xui.fn = xui.prototype = {
 
 	### 参数 ###
 
-	- selector `字符串` is a CSS selector that will query for elements.
-	- context `HTMLElement` is the parent element to search from _(optional)_.
+	- selector `字符串` 一个CSS选择器，作为匹配规则。
+	- context `HTML元素` 被查询的父元素_(可选)_.
  
 	### 例子 ###
 
-	Given the following markup:
+	设有如下代码：
 
 		<ul id="first">
 		    <li id="one">1</li>
@@ -122,10 +121,10 @@ xui.fn = xui.prototype = {
 		    <li id="four">4</li>
 		</ul>
 
-	We can select list items using `find`:
+	我们可以用`find`选出所有列表元素：
 
-		x$('li');                 // returns all four list item elements.
-		x$('#second').find('li'); // returns list items "three" and "four"
+		x$('li');                 // 返回所有四个列表元素。
+		x$('#second').find('li'); // 返回id为"three"和"four"的列表元素
 */
     find: function(q, context) {
         var ele = [], tempNode;
@@ -138,15 +137,15 @@ xui.fn = xui.prototype = {
             }).reduce(ele);
         } else {
             context = context || document;
-            // fast matching for pure ID selectors and simple element based selectors
+            // 快速匹配纯ID选择器和基于简单元素的选择器
             if (typeof q == string) {
               if (simpleExpr.test(q) && context.getElementById && context.getElementsByTagName) {
                   ele = idExpr.test(q) ? [context.getElementById(q.substr(1))] : context.getElementsByTagName(q);
-                  // nuke failed selectors
+                  // 清空失败的选择结果
                   if (ele[0] == null) { 
                     ele = [];
                   }
-              // match for full html tags to create elements on the go
+              // 对q完全由html标记构成的情况，根据标记生成对应的元素
               } else if (tagExpr.test(q)) {
                   tempNode = document.createElement('i');
                   tempNode.innerHTML = q;
@@ -154,21 +153,20 @@ xui.fn = xui.prototype = {
                     ele.push(el);
                   });
               } else {
-                  // one selector, check if Sizzle is available and use it instead of querySelectorAll.
+                  // 当Sizzle可用时，用它替代querySelectorAll
                   if (window.Sizzle !== undefined) {
                     ele = Sizzle(q, context);
                   } else {
                     ele = context.querySelectorAll(q);
                   }
               }
-              // blanket slice
+              // 确保ele成为数组
               ele = slice(ele);
             } else if (q instanceof Array) {
                 ele = q;
             } else if (q.toString() == '[object NodeList]' || q.toString() == '[object HTMLCollection]') {
                 ele = slice(q);
-            } else if (q.nodeName || q === window) { // only allows nodes in
-                // an element was passed in
+            } else if (q.nodeName || q === window) { // 将单个的node转换成仅包含一个元素的数组的形式
                 ele = [q];
             }
         }
@@ -181,7 +179,7 @@ xui.fn = xui.prototype = {
 	set
 	---
 
-	Sets the objects in the xui collection.
+	将对象转化为xui集。
 
 	### 语法 ###
 
@@ -207,8 +205,8 @@ xui.fn = xui.prototype = {
 
 	### 参数 ###
 
-	- elements `Array` is an array of elements to reduce _(optional)_.
-	- index `Number` is the last array index to include in the reduction. If unspecified, it will reduce all elements _(optional)_.
+	- elements `Array` is an array of elements to reduce _(可选)_.
+	- index `Number` is the last array index to include in the reduction. If unspecified, it will reduce all elements _(可选)_.
 */
     reduce: function(elements, b) {
         var a = [],
