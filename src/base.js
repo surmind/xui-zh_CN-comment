@@ -2,15 +2,15 @@
 	Basics
 	======
     
-    xui以全局函数`x$`供使用。该函数能以CSS选择器字符串、DOM元素、或是包含了它们的数组作为参数，
-    并返回xui对象。例如：
+    xui提供全局函数`x$`供开发者使用。该函数能以CSS选择器、DOM元素、由它们构成的数组为参数，
+    返回xui对象。例如：
     
         var header = x$('#header'); // 返回id='header'的元素。
         
     如果需要更多关于CSS选择器的信息， 请访问[W3C specification](http://www.w3.org/TR/CSS2/selector.html)。请注意有不同级别的CSS选择器(Levels 1, 2 和 3)
-    不同浏览器对它们有不同程度的支持。千万要注意！
+    千万要注意！不同浏览器对CSS选择器有不同程度的支持。
     
-	本文档中所描述的函数都是xui对象中的，并且通常情况下以xui集的形式操作或获取元素的信息。
+	本文档中所描述的函数都是xui对象中的，并且通常情况下对xui集进行操作或以xui集的形式返回信息。
 
 */
 var undefined,
@@ -29,7 +29,7 @@ window.x$ = window.xui = xui = function(q, context) {
     return new xui.fn.find(q, context);
 };
 
-// 引入forEach以助于减少代码量 and avoid over the top currying on event.js and dom.js (shortcuts)
+// 引入forEach以减少代码量 and avoid over the top currying on event.js and dom.js (shortcuts)
 if (! [].forEach) {
     Array.prototype.forEach = function(fn) {
         var len = this.length || 0,
@@ -170,8 +170,8 @@ xui.fn = xui.prototype = {
                 ele = [q];
             }
         }
-        // disabling the append style, could be a plugin (found in more/base):
-        // xui.fn.add = function (q) { this.elements = this.elements.concat(this.reduce(xui(q).elements)); return this; }
+        
+
         return this.set(ele);
     },
 
@@ -197,7 +197,7 @@ xui.fn = xui.prototype = {
 	reduce
 	------
 
-	Reduces the set of elements in the xui object to a unique set.
+	移除xui对象中的重复元素。
 
 	### 语法 ###
 
@@ -205,14 +205,14 @@ xui.fn = xui.prototype = {
 
 	### 参数 ###
 
-	- elements `Array` is an array of elements to reduce _(可选)_.
-	- index `Number` is the last array index to include in the reduction. If unspecified, it will reduce all elements _(可选)_.
+	- elements `数组` 一个要移除重复元素的数组 _(可选)_ 。
+	- index `数` 移除重复元素的操作到这个下标的元素位置。如果没有定义，则会对所有元素进行操作 _(可选)_ 。
 */
     reduce: function(elements, b) {
         var a = [],
         elements = elements || slice(this);
         elements.forEach(function(el) {
-            // question the support of [].indexOf in older mobiles (RS will bring up 5800 to test)
+            // 对较早的手机是否支持 [].indexOf 表示怀疑(RS 会用 5800 去测试)
             if (a.indexOf(el, 0, b) < 0)
             a.push(el);
         });
@@ -264,7 +264,7 @@ xui.fn = xui.prototype = {
 	filter
 	------
 
-	Extend XUI with custom filters. This is an interal utility function, but is also useful to developers.
+	用自定义的筛选功能扩展XUI。这是一个内置的工具函数，但是对开发者也同样很有用。
 
 	### 语法 ###
 
@@ -272,17 +272,17 @@ xui.fn = xui.prototype = {
 
 	### 参数 ###
 
-	- fn `函数` is called for each element in the XUI collection.
+	- fn `函数` 被XUI集中的每个元素调用。
 
-	        // `index` is the array index of the current element
+	        // `index` 当前元素的在数组中的下标
 	        function( index ) {
-	            // `this` is the element iterated on
-	            // return true to add element to new XUI collection
+	            // `this` 当前迭代的元素
+	            // 返回true时将元素添加到新的XUI集
 	        }
 
 	### 例子 ###
 
-	Filter all the `<input />` elements that are disabled:
+	筛选出disabled的`<input />`元素
 
 		x$('input').filter(function(index) {
 		    return this.checked;
@@ -299,7 +299,7 @@ xui.fn = xui.prototype = {
 	not
 	---
 
-	The opposite of `has`. It modifies the elements and returns all of the elements that do __not__ match a CSS query.
+	与`has`相反的函数。修改元素，返回所有 __不__ 匹配CSS选择器的结果.
 
 	### 语法 ###
 
@@ -307,7 +307,7 @@ xui.fn = xui.prototype = {
 
 	### 参数 ###
 
-	- selector `字符串` a CSS selector for the elements that should __not__ be matched.
+	- selector `字符串` 一个CSS选择器，用来选出所有与它 __不__ 匹配的元素。
 
 	### 例子 ###
 
@@ -320,10 +320,10 @@ xui.fn = xui.prototype = {
 		    <div class="shadow">Item four</div>
 		</div>
 
-	We can use `not` to select objects:
+	我们可以使用 `not` 选择对象：
 
-		var divs     = x$('div');          // got all four divs.
-		var notRound = divs.not('.round'); // got two divs with classes .square and .shadow
+		var divs     = x$('div');          // 得到全部的四个div元素。
+		var notRound = divs.not('.round'); // 得到那辆个class为 .square 和 .shadow 的元素。
 */
     not: function(q) {
         var list = slice(this);
@@ -364,7 +364,7 @@ xui.fn = xui.prototype = {
 		});
 */
     each: function(fn) {
-        // we could compress this by using [].forEach.call - but we wouldn't be able to support
+        // 通过使用[].forEach.call我们还能压缩这里的代码 - but we wouldn't be able to support
         // fn 返回 false 时终止循环，这是一个我非常喜欢的特性
         for (var i = 0, len = this.length; i < len; ++i) {
             if (fn.call(this[i], this[i], i, this) === false)
