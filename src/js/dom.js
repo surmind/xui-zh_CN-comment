@@ -2,7 +2,7 @@
 	DOM
 	===
 
-	Set of methods for manipulating the Document Object Model (DOM).
+    一批操作DOM的方法
 
 */
 xui.extend({
@@ -10,31 +10,31 @@ xui.extend({
 	html
 	----
 
-	Manipulates HTML in the DOM. Also just returns the inner HTML of elements in the collection if called with no arguments.
+    通过DOM操作HTML。也可以不带参数地调用，以获取元素的内部HTML
 
-	### syntax ###
+	### 语法 ###
 
 		x$( window ).html( location, html );
 
-	or this method will accept just a HTML fragment with a default behavior of inner:
+    或者通过传入一个段HTML来改变内部HTML
 
 		x$( window ).html( html );
 
-	or you can use shorthand syntax by using the location name argument as the function name:
+    也可以使用简写语法，把参数location的可接受的名称直接作为函数名
 
 		x$( window ).outer( html );
 		x$( window ).before( html );
 	
-	or you can just retrieve the inner HTML of elements in the collection with:
+    或者用下面的语法来获取内部HTML
 	
 	    x$( document.body ).html();
 
-	### arguments ###
+	### 参数 ###
 
-	- location `String` can be one of: _inner_, _outer_, _top_, _bottom_, _remove_, _before_ or _after_.
-	- html `String` is a string of HTML markup or a `HTMLElement`.
+	- location `字符串` 可以是: _inner_, _outer_, _top_, _bottom_, _remove_, _before_ or _after_.
+	- html `字符串` 一段HTML标记语言或一个`HTMLElement`.
 
-	### example ###
+	### 例子 ###
 
 		x$('#foo').html('inner', '<strong>rock and roll</strong>');
 		x$('#foo').html('outer', '<p>lock and load</p>');
@@ -44,7 +44,7 @@ xui.extend({
 		x$('#foo').html('before', '<p>some warmup html</p>');
 		x$('#foo').html('after',  '<p>more html!</p>');
 
-	or
+	或
 
 		x$('#foo').html('<p>sweet as honey</p>');
 		x$('#foo').outer('<p>free as a bird</p>');
@@ -121,24 +121,25 @@ xui.extend({
 	attr
 	----
 
+    获取或设置元素的属性。获取时，返回一个属性数组，包含元素集中所有匹配的属性
 	Gets or sets attributes on elements. If getting, returns an array of attributes matching the xui element collection's indices.
 
-	### syntax ###
+	### 语法 ###
 
 		x$( window ).attr( attribute, value );
 
-	### arguments ###
+	### 参数 ###
 
-	- attribute `String` is the name of HTML attribute to get or set.
-	- value `Varies` is the value to set the attribute to. Do not use to get the value of attribute _(optional)_.
+	- attribute `字符串` 想要获取或设置的HTML属性名称。
+	- value `Varies` 想要设置的属性值。获取属性时不要使用这个参数_(可选)_。
 
-	### example ###
+	### 例子 ###
 
-	To get an attribute value, simply don't provide the optional second parameter:
+    用作获取一个属性值，只要别传入第二个可选参数就可以了：
 
 		x$('.someClass').attr('class');
 
-	To set an attribute, use both parameters:
+	用作设置一个属性，就传入两个参数：
 
 		x$('.someClass').attr('disabled', 'disabled');
 */
@@ -161,7 +162,7 @@ xui.extend({
 "inner outer top bottom remove before after".split(' ').forEach(function (method) {
   xui.fn[method] = function(where) { return function (html) { return this.html(where, html); }; }(method);
 });
-// private method for finding a dom element
+// 查找DOM元素的私有函数
 function getTag(el) {
     return (el.firstChild === null) ? {'UL':'LI','DL':'DT','TR':'TD'}[el.tagName] || el.tagName : el.firstChild.tagName;
 }
@@ -170,9 +171,9 @@ function wrapHelper(html, el) {
   return (typeof html == string) ? wrap(html, getTag(el)) : html;
 }
 
-// private method
-// Wraps the HTML in a TAG, Tag is optional
-// If the html starts with a Tag, it will wrap the context in that tag.
+// 私有方法
+// 把html包在一个tag标签里，tag是可选的
+// 如果参数xhtml以一个tag作为开头，就将内容包含在那个tag中
 function wrap(xhtml, tag) {
 
     var attributes = {},
@@ -219,7 +220,7 @@ function wrap(xhtml, tag) {
 
 
 /*
-* Removes all erronious nodes from the DOM.
+* 从DOM中移除所有错误的节点，译注：看代码应该是移除了空的文本节点
 * 
 */
 function clean(collection) {
