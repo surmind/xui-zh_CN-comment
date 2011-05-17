@@ -2,7 +2,7 @@
 	Event
 	=====
 
-	A good old fashioned events with new skool handling. Shortcuts exist for:
+    用新方式处理事件
 
 	- click
 	- load
@@ -23,28 +23,28 @@ xui.extend({
 	on
 	--
 
-	Registers a callback function to a DOM event on the element collection.
+    给元素集中的DOM事件注册一个回调函数。
 
-	### syntax ###
+	### 语法 ###
 
 		x$( 'button' ).on( type, fn );
 
-	or
+	或
 
 		x$( 'button' ).click( fn );
 
-	### arguments ###
+	### 参数 ###
 
-	- type `String` is the event to subscribe (e.g. _load_, _click_, _touchstart_, etc).
-	- fn `Function` is a callback function to execute when the event is fired.
+	- type `字符串` 要注册的事件类型 (如： _load_, _click_, _touchstart_ 等)。
+	- fn `函数` 事件触发时要执行的回调函数。
 
-	### example ###
+	### 例子 ###
 
 		x$( 'button' ).on( 'click', function(e) {
 		    alert('hey that tickles!');
 		});
 
-	or
+	或
 
 		x$(window).load(function(e) {
 		  x$('.save').touchstart( function(evt) { alert('tee hee!'); }).css(background:'grey');
@@ -62,6 +62,7 @@ xui.extend({
                 };
                 
                 // trigger the initialiser - only happens the first time around
+                // 触发初始化 - 只有第一次
                 if (!responders.length) {
                     xui.events[type].call(el, details);
                 }
@@ -74,35 +75,35 @@ xui.extend({
 	un
 	--
 
-	Unregisters a specific callback, or if no specific callback is passed in, 
-	unregisters all event callbacks of a specific type.
+    注销一个特定的回调函数，如果没有指定回调函数，
+    注销注册在一个特定事件类型上的所有回调函数。
 
-	### syntax ###
+	### 语法 ###
 
-	Unregister the given function, for the given type, on all button elements:
+    注销绑定在所有button元素的type类型事件上的fn函数
 
 		x$( 'button' ).un( type, fn );
 
-	Unregisters all callbacks of the given type, on all button elements:
+    注销所有绑定在button元素的type类型事件上的回调函数：
 
 		x$( 'button' ).un( type );
 
-	### arguments ###
+	### 参数 ###
 
-	- type `String` is the event to unsubscribe (e.g. _load_, _click_, _touchstart_, etc).
-	- fn `Function` is the callback function to unsubscribe _(optional)_.
+	- type `字符串` 要注销的事件类型 (如： _load_, _click_, _touchstart_等)。
+	- fn `函数` 要注销的回调函数 _(可选)_.
 
-	### example ###
+	### 例子 ###
 
-		// First, create a click event that display an alert message
+        // 首先，创建一个点击事件，用来显示一个alert信息
 		x$('button').on('click', function() {
 		    alert('hi!');
 		});
 		
-		// Now unsubscribe all functions that response to click on all button elements
+        // 现在演示的是注销所有响应button元素click事件的函数
 		x$('button').un('click');
 
-	or
+	或
 
 		var greeting = function() { alert('yo!'); };
 		
@@ -111,7 +112,7 @@ xui.extend({
 		    alert('hi!');
 		});
 		
-		// When any button is clicked, the 'hi!' message will fire, but not the 'yo!' message.
+		// 任何button元素被点击时，信息'hi!'会被触发，而'yo!'不会。
 		x$('button').un('click', greeting);
 */
     un: function(type, fn) {
@@ -137,18 +138,18 @@ xui.extend({
 	fire
 	----
 
-	Triggers a specific event on the xui collection.
+    对xui集中的元素触发一个特定的事件
 
-	### syntax ###
+	### 语法 ###
 
 		x$( selector ).fire( type, data );
 
-	### arguments ###
+	### 参数 ###
 
-	- type `String` is the event to fire (e.g. _load_, _click_, _touchstart_, etc).
-	- data `Object` is a JSON object to use as the event's `data` property.
+	- type `字符串` 要触发的事件 (如： _load_, _click_, _touchstart_ 等)。
+	- data `对象` 一个JSON对象，用来作为事件的data属性。
 
-	### example ###
+	### 例子 ###
 
 		x$('button#reset').fire('click', { died:true });
 		
@@ -173,7 +174,7 @@ xui.extend({
   xui.fn[event] = function(action) { return function (fn) { return fn ? this.on(action, fn) : this.fire(action); }; }(event);
 });
 
-// patched orientation support - Andriod 1 doesn't have native onorientationchange events
+// 屏幕方向支持 - Android 1 不支持原生的onorientationchange事件
 xui(window).on('load', function() {
     if (!('onorientationchange' in document.body)) {
       (function (w, h) {
@@ -200,7 +201,7 @@ xui.touch = (function () {
   };
 })();
 
-// lifted from Prototype's (big P) event model
+// 模仿Prototype的事件模型
 function _getEventID(element) {
     if (element._xuiEventID) return element._xuiEventID;
     return element._xuiEventID = ++_getEventID.id;
