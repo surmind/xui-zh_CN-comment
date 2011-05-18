@@ -2,7 +2,7 @@
 	Fx
 	==
 
-	Animations, transforms, and transitions for getting the most out of hardware accelerated CSS.
+    动画、形变、渐变，让CSS最大限度地发挥硬件性能
 
 */
 
@@ -12,50 +12,50 @@ xui.extend({
 	Tween
 	-----
 
-	Transforms a CSS property's value.
+    转变一个CSS属性值
 
-	### syntax ###
+	### 语法 ###
 
 		x$( selector ).tween( properties, callback );
 
-	### arguments ###
+	### 参数 ###
 
-	- properties `Object` or `Array` of CSS properties to tween.
-	    - `Object` is a JSON object that defines the CSS properties.
-	    - `Array` is a `Object` set that is tweened sequentially.
-	- callback `Function` to be called when the animation is complete. _(optional)_.
+	- properties `对象` 或 `数组`，要进行补间的CSS属性。
+	    - `对象` 一个JSON对象，定义了CSS属性。
+	    - `数组` 由一个或多个上述的JSON对象顺序排列组成的数组，会顺次执行其中的JSON对象定义的动画效果
+	- callback `函数` 动画结束后调用的函数. _(可选)_.
 
 	### properties ###
 
-	A property can be any CSS style, referenced by the JavaScript notation.
+    properties可以是任何的CSS样式，用JavaScript的形式表现
 
-	A property can also be an option from [emile.js](https://github.com/madrobby/emile):
+    properties也可以是[emile.js](https://github.com/madrobby/emile)中的一个
 
-	- duration `Number` of the animation in milliseconds.
-	- after `Function` is called after the animation is finished.
-	- easing `Function` allows for the overriding of the built-in animation function.
+	- duration `数字` 动画持续时间，单位毫秒。
+	- after `函数` 动画结束后调用。
+	- easing `函数` 允许取代内建的动画函数。
 
-			// Receives one argument `pos` that indicates position
-			// in time between animation's start and end.
+			// 接受参数 `pos` ，标记位置
+			// 在动画开始和结束之间的时间
 			function(pos) {
-			    // return the new position
+			    // 返回新的位置
 			    return (-Math.cos(pos * Math.PI) / 2) + 0.5;
 			}
 
-	### example ###
+	### 例子 ###
 
-		// one JSON object
+		// 一个JSON对象
 		x$('#box').tween({ left:'100px', backgroundColor:'blue' });
 		x$('#box').tween({ left:'100px', backgroundColor:'blue' }, function() {
 		    alert('done!');
 		});
 		
-		// array of two JSON objects
+		// 两个JSON对象组成的数组
 		x$('#box').tween([{left:'100px', backgroundColor:'green', duration:.2 }, { right:'100px' }]); 
 */
 	tween: function( props, callback ) {
 	    
-	    // creates an options obj for emile
+        // 创建一个options对象，用于emile
 	    var emileOpts = function(o) {
 	        var options = {};
     		"duration after easing".split(' ').forEach( function(p) {
@@ -67,7 +67,7 @@ xui.extend({
     		return options;
 	    }
 	    
-	    // serialize the properties into a string for emile
+	    // 将properties序列化成一个用于emile的字符串
 	    var serialize = function(props) {
 		    var serialisedProps = [], key;
     		if (typeof props != string) {
@@ -81,7 +81,7 @@ xui.extend({
     		return serialisedProps;
 		};
 	    
-		// queued animations
+		// 排好队的动画
 		if (props instanceof Array) {
 		    // animate each passing the next to the last callback to enqueue
 		    props.forEach(function(a){
@@ -89,7 +89,7 @@ xui.extend({
 		    });
 		}
 
-	    // this branch means we're dealing with a single tween
+        // 这个分支意味着我们在处理一个单一的补间
 	    var opts = emileOpts(props);
 	    var prop = serialize(props);
 		
