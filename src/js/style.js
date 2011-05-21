@@ -2,7 +2,7 @@
 	Style
 	=====
 
-	Everything related to appearance. Usually, this is CSS.
+    所有和表现有关的东西，大多数情况下，就是CSS
 
 */
 function hasClass(el, className) {
@@ -10,7 +10,7 @@ function hasClass(el, className) {
 }
 
 // Via jQuery - used to avoid el.className = ' foo';
-// Used for trimming whitespace
+// 用来移除空白字符
 var rtrim = /^(\s|\u00A0)+|(\s|\u00A0)+$/g;
 
 function trim(text) {
@@ -22,18 +22,18 @@ xui.extend({
 	setStyle
 	--------
 
-	Sets the value of a single CSS property.
+    设置一个单一的CSS属性
 
-	### syntax ###
+	### 语法 ###
 
 		x$( selector ).setStyle( property, value );
 
-	### arguments ###
+	### 参数 ###
 
-	- property `String` is the name of the property to modify.
-	- value `String` is the new value of the property.
+	- property `字符串` 要修改的属性的名称。
+	- value `字符串` 属性新的值。
 
-	### example ###
+	### 例子 ###
 
 		x$('.flash').setStyle('color', '#000');
 		x$('.button').setStyle('backgroundColor', '#EFEFEF');
@@ -49,19 +49,19 @@ xui.extend({
 	getStyle
 	--------
 
-	Returns the value of a single CSS property. Can also invoke a callback to perform more specific processing tasks related to the property value.
-	Please note that the return type is always an Array of strings. Each string corresponds to the CSS property value for the element with the same index in the xui collection.
+    返回一个CSS属性的值。允许执行一个回调函数对该值进行特定处理。
+    请注意返回值永远是一个数组，数组内的元素为字符串。每个字符串依次对应xui集中各元素相应属性的值
 
-	### syntax ###
+	### 语法 ###
 
 		x$( selector ).getStyle( property, callback );
 
-	### arguments ###
+	### 参数 ###
 
-	- property `String` is the name of the CSS property to get.
-	- callback `Function` is called on each element in the collection and passed the property _(optional)_.
+	- property `字符串` 要获取的CSS属性的名称。
+	- callback `函数` 对xui集中的每个元素调用此函数，并传入property做为参数_(可选)_.
 
-	### example ###
+	### 例子 ###
         <ul id="nav">
             <li class="trunk" style="font-size:12px;background-color:blue;">hi</li>
             <li style="font-size:14px;">there</li>
@@ -94,17 +94,17 @@ xui.extend({
 	addClass
 	--------
 
-	Adds a class to all of the elements in the collection.
+    给元素集中的每个元素增加一个class
 
-	### syntax ###
+	### 语法 ###
 
 		$( selector ).addClass( className );
 
-	### arguments ###
+	### 参数 ###
 
-	- className `String` is the name of the CSS class to add.
+	- className `字符串` 要添加的CSS类的名称。
 
-	### example ###
+	### 例子 ###
 
 		$('.foo').addClass('awesome');
 */
@@ -120,23 +120,22 @@ xui.extend({
 	hasClass
 	--------
 
-	Checks if the class is on _all_ elements in the xui collection.
+    检查是否xui集中的_所有_元素都有这个class。
 
-	### syntax ###
+	### 语法 ###
 
 		$( selector ).hasClass( className, fn );
 
-	### arguments ###
+	### 参数 ###
 
-	- className `String` is the name of the CSS class to find.
-	- fn `Function` is a called for each element found and passed the element _(optional)_.
-
-			// `element` is the HTMLElement that has the class
+	- className `字符串` 要找的CSS类的名称。
+	- fn `函数` 每个匹配的元素都会调用这个函数，并把自己作为该函数的参数_(可选)_。
+			// `element` 拥有该class的HTMLElement
 			function(element) {
 			    console.log(element);
 			}
 
-	### example ###
+	### 例子 ###
         <div id="foo" class="foo awesome"></div>
         <div class="foo awesome"></div>
         <div class="foo"></div>
@@ -144,13 +143,13 @@ xui.extend({
 		// returns true
 		x$('#foo').hasClass('awesome');
 		
-		// returns false (not all elements with class 'foo' have class 'awesome'),
-		// but the callback gets invoked with the elements that did match the 'awesome' class
+		// returns false (不是所有带类'foo'的元素都有类'awesome')，
+		// 但回调函数仍会对每个带类'awesome'的元素执行
 		x$('.foo').hasClass('awesome', function(element) {
 		    console.log('Hey, I found: ' + element + ' with class "awesome"');
 		});
 		
-		// returns true (all DIV elements have the 'foo' class)
+		// returns true (所有div元素都有类'foo')
 		x$('div').hasClass('foo');
 */
     hasClass: function(className, callback) {
@@ -170,17 +169,17 @@ xui.extend({
 	removeClass
 	-----------
 
-	Removes the specified class from all elements in the collection. If no class is specified, removes all classes from the collection.
+    移除xui集的元素中的指定class。如果没有指定一个特定的class，移除所有class
 
-	### syntax ###
+	### 语法 ###
 
 		x$( selector ).removeClass( className );
 
-	### arguments ###
+	### 参数 ###
 
-	- className `String` is the name of the CSS class to remove. If not specified, then removes all classes from the matched elements. _(optional)_
+	- className `字符串` 要移除的CSS class的名称。如果没有指定，从所有匹配的元素中移除所有class_(可选)_
 
-	### example ###
+	### 例子 ###
 
 		x$('.foo').removeClass('awesome');
 */
@@ -194,17 +193,17 @@ xui.extend({
 	toggleClass
 	-----------
 
-	Removes the specified class if it exists on the elements in the xui collection, otherwise adds it. 
+    针对xui集中的元素，如果指定的类存在则移除，不存在则添加
 
-	### syntax ###
+	### 语法 ###
 
 		x$( selector ).toggleClass( className );
 
-	### arguments ###
+	### 参数 ###
 
-	- className `String` is the name of the CSS class to toggle.
+	- className `字符串` 要转换的CSS类的名称。
 
-	### example ###
+	### 例子 ###
         <div class="foo awesome"></div>
         
 		x$('.foo').toggleClass('awesome'); // div above loses its awesome class.
@@ -220,17 +219,17 @@ xui.extend({
 	css
 	---
 
-	Set multiple CSS properties at once.
+    一次设置多个CSS属性
 
-	### syntax ###
+	### 语法 ###
 
 		x$( selector ).css( properties );
 
-	### arguments ###
+	### 参数 ###
 
-	- properties `Object` is a JSON object that defines the property name/value pairs to set.
+	- properties `对象` 一个JSON对象，定义了要设置的键值对。
 
-	### example ###
+	### 例子 ###
 
 		x$('.foo').css({ backgroundColor:'blue', color:'white', border:'2px solid red' });
 */
