@@ -2,7 +2,7 @@
 	XHR
 	===
 
-	Everything related to remote network connections.
+    所有和远程网络连接相关的功能
 
  */
 xui.extend({	
@@ -10,47 +10,47 @@ xui.extend({
 	xhr
 	---
 
-	The classic `XMLHttpRequest` sometimes also known as the Greek God: _Ajax_. Not to be confused with _AJAX_ the cleaning agent.
+    经典的`XMLHttpRequest`，就是通常被大家称作_Ajax_的东西。
 
-	### detail ###
+	### 详情 ###
 
-	This method has a few new tricks.
+    这个方法有些新的小把戏
 
-	It is always invoked on an element collection and uses the behaviour of `html`.
+    通常以`html`的行为在元素集上执行
 
-	If there is no callback, then the `responseText` will be inserted into the elements in the collection.
+    如果没有定义回调函数，`responseText`会被插入到xui集的元素中
 
-	### syntax ###
+	### 语法 ###
 
 		x$( selector ).xhr( location, url, options )
 
-	or accept a url with a default behavior of inner:
+    或者接收一个url，默认行为为inner
 
 		x$( selector ).xhr( url, options );
 
-	or accept a url with a callback:
+    或者接收一个url和回调函数
 	
 		x$( selector ).xhr( url, fn );
 
-	### arguments ###
+	### 参数 ###
 
-	- location `String` is the location to insert the `responseText`. See `html` for values.
-	- url `String` is where to send the request.
-	- fn `Function` is called on status 200 (i.e. success callback).
-	- options `Object` is a JSON object with one or more of the following:
-		- method `String` can be _get_, _put_, _delete_, _post_. Default is _get_.
-		- async `Boolean` enables an asynchronous request. Defaults to _false_.
-		- data `String` is a url encoded string of parameters to send.
-		- callback `Function` is called on status 200 (i.e. success callback).
-    - headers `Object` is a JSON object with key:value pairs that get set in the request's header set.
+	- location `字符串` 要插入`responseText`的位置。参考DOM中的`html`
+	- url `字符串` 向这个位置发送请求。
+	- fn `函数` 在响应状态为200的时候执行 (例如成功时的回调函数)。
+	- options `对象` 一个JSON对象，由一个或多个下列元素构成：
+		- method `字符串` 允许的值有 _get_, _put_, _delete_, _post_。默认为_get_.
+		- async `布尔` 启用同步请求。默认为 _false_.
+		- data `字符串` 一个url编码的字符串，包含了要发送的参数。
+		- callback `函数` 在响应状态为200时执行 (例如成功时的回调函数)。
+    - headers `对象` 一个JSON对象，由键值对组成，更改和获取请求头部的设置。
 
-	### response ###
+	### 响应 ###
 
-	- The response is available to the callback function as `this`.
-	- The response is not passed into the callback.
-	- `this.reponseText` will have the resulting data from the file.
+	- 在回调函数中，响应可以通过`this`来引用。
+	- 响应没有做为参数传入回调函数。
+	- `this.reponseText` 包含了返回的数据。
 
-	### example ###
+	### 例子 ###
 
 		x$('#status').xhr('inner', '/status.html');
 		x$('#status').xhr('outer', '/status.html');
@@ -59,12 +59,12 @@ xui.extend({
 		x$('#status').xhr('before','/status.html');
 		x$('#status').xhr('after', '/status.html');
 
-	or
+	或
 
-		// same as using 'inner'
+		// 相当于使用'inner'
 		x$('#status').xhr('/status.html');
 
-		// define a callback, enable async execution and add a request header
+        // 定义一个回调函数，开启同步执行，增加一个请求头
 		x$('#left-panel').xhr('/panel', {
 		    async: true,
 		    callback: function() {
@@ -75,14 +75,14 @@ xui.extend({
         }
 		});
 
-		// define a callback with the shorthand syntax
+        // 用简写语法定义回调函数
 		x$('#left-panel').xhr('/panel', function() {
 		    alert("The response is " + this.responseText);
 		});
 */
     xhr:function(location, url, options) {
 
-      // this is to keep support for the old syntax (easy as that)
+        // 用来保持对旧语法的兼容
 		if (!/^(inner|outer|top|bottom|before|after)$/.test(location)) {
             options = url;
             url = location;
