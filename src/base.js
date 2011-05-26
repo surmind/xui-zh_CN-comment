@@ -2,25 +2,25 @@
 	Basics
 	======
     
-    xui提供全局函数`x$`供开发者使用。该函数能以CSS选择器、DOM元素、由它们构成的数组为参数，
-    返回xui对象。例如：
+    xui提供全局函数`x$`供开发者使用。该函数能以CSS选择器、DOM元素，以及由二者构成的数组为参数，
+    并返回一个xui对象。如：
     
         var header = x$('#header'); // 返回id='header'的元素。
         
-    如果需要更多关于CSS选择器的信息， 请访问[W3C specification](http://www.w3.org/TR/CSS2/selector.html)。请注意有不同级别的CSS选择器(Levels 1, 2 和 3)
-    千万要注意！不同浏览器对CSS选择器有不同程度的支持。
+    如果需要更多关于CSS选择器的信息，请访问[W3C specification](http://www.w3.org/TR/CSS2/selector.html)。请注意：w3c定义了不同级别的CSS选择器(包括Levels 1, 2 和 3)。
+    千万要注意！不同浏览器对CSS选择器的支持程度不同。
     
-	本文档中所描述的函数都是xui对象中的，并且通常情况下对xui集进行操作或以xui集的形式返回信息。
+	本文档中所描述的函数都是xui对象中的方法，并且通常情况下这些方法都把xui集做为操作对象或返回值。
 
 */
 var undefined,
     xui,
     window     = this,
     string     = new String('string'), // prevents Goog compiler from removing primative and subsidising out allowing us to compress further
-    document   = window.document,      // obvious really
+    document   = window.document,      // 显然
     simpleExpr = /^#?([\w-]+)$/,   // for situations of dire need. Symbian and the such        
     idExpr     = /^#/,
-    tagExpr    = /<([\w:]+)/, // 如此一来你就能即时地创建元素，通过类似 x$('<img href="/foo" /><strong>yay</strong>') 的方式
+    tagExpr    = /<([\w:]+)/, // 如此一来你就能通过类似 x$('<img href="/foo" /><strong>yay</strong>') 的方式动态地创建元素
     slice      = function (e) { return [].slice.call(e, 0); };
     try { var a = slice(document.documentElement.childNodes)[0].nodeType; }
     catch(e){ slice = function (e) { var ret=[]; for (var i=0; e[i]; i++) ret.push(e[i]); return ret; }; }
@@ -29,7 +29,7 @@ window.x$ = window.xui = xui = function(q, context) {
     return new xui.fn.find(q, context);
 };
 
-// 引入forEach以减少代码量 and avoid over the top currying on event.js and dom.js (shortcuts)
+// 引入forEach以减少代码量
 if (! [].forEach) {
     Array.prototype.forEach = function(fn) {
         var len = this.length || 0,
@@ -59,7 +59,7 @@ xui.fn = xui.prototype = {
 	extend
 	------
 
-	用另一个对象的成员来扩展XUI的原型。
+	用另一个对象的成员来扩展xui的原型。
 
 	### 语法 ###
 
@@ -67,7 +67,7 @@ xui.fn = xui.prototype = {
 
 	### 参数 ###
 
-	- object `对象` 包含了一些成员，这些成员被添加到XUI的原型。
+	- object `对象` 此对象的成员会被添加到xui的原型。
  
 	### 例子 ###
 
@@ -78,11 +78,11 @@ xui.fn = xui.prototype = {
 		    last:  function() { return this[this.length - 1]; }
 		}
 
-    我们可以用`extend`将`sugar`中的成员扩展到xui的原型中：
+    用`extend`将`sugar`的成员扩展到xui的原型中：
 
 		xui.extend(sugar);
 
-    然后我们就可以在所有的xui实例中使用`first`和`last`
+    然后就可以在所有的xui实例中使用`first`和`last`
 
 		var f = x$('.button').first();
 		var l = x$('.notice').last();
@@ -97,7 +97,7 @@ xui.fn = xui.prototype = {
 	find
 	----
 
-	找出和指定选择器匹配的元素。`x$`是`find`的一个别名。
+	选择和指定选择器匹配的元素。`x$`是`find`的一个别名。
 
 	### 语法 ###
 
@@ -106,7 +106,7 @@ xui.fn = xui.prototype = {
 	### 参数 ###
 
 	- selector `字符串` 一个CSS选择器，作为匹配规则。
-	- context `HTML元素` 被查询的父元素_(可选)_.
+	- context `HTMLElement` 被查询的父元素_(可选)_.
  
 	### 例子 ###
 
@@ -121,10 +121,10 @@ xui.fn = xui.prototype = {
 		    <li id="four">4</li>
 		</ul>
 
-	我们可以用`find`选出所有列表元素：
+	我们可以用`find`选择所有"li"元素：
 
-		x$('li');                 // 返回所有四个列表元素。
-		x$('#second').find('li'); // 返回id为"three"和"four"的列表元素
+		x$('li');                 // 返回所有(4个)"li"元素。
+		x$('#second').find('li'); // 返回id为"three"和"four"的"li"元素
 */
     find: function(q, context) {
         var ele = [], tempNode;
@@ -137,7 +137,7 @@ xui.fn = xui.prototype = {
             }).reduce(ele);
         } else {
             context = context || document;
-            // 快速匹配纯ID选择器和基于简单元素的选择器
+            // 快速匹配纯ID选择器和基于标签名称的选择器
             if (typeof q == string) {
               if (simpleExpr.test(q) && context.getElementById && context.getElementsByTagName) {
                   ele = idExpr.test(q) ? [context.getElementById(q.substr(1))] : context.getElementsByTagName(q);
@@ -264,7 +264,7 @@ xui.fn = xui.prototype = {
 	filter
 	------
 
-	用自定义的筛选功能扩展XUI。这是一个内置的工具函数，但是对开发者也同样很有用。
+	用自定义的筛选功能扩展xui。这是一个内置的工具函数，但是对开发者也同样很有用。
 
 	### 语法 ###
 
@@ -272,12 +272,12 @@ xui.fn = xui.prototype = {
 
 	### 参数 ###
 
-	- fn `函数` 被XUI集中的每个元素调用。
+	- fn `函数` 被xui集中的每个元素调用。
 
 	        // `index` 当前元素的在数组中的下标
 	        function( index ) {
 	            // `this` 当前迭代的元素
-	            // 返回true时将元素添加到新的XUI集
+	            // 返回true时将元素添加到新的xui集
 	        }
 
 	### 例子 ###
@@ -340,7 +340,7 @@ xui.fn = xui.prototype = {
 	each
 	----
 
-    对XUI集合中的元素进行迭代操作
+    对xui集合中的元素进行迭代操作
 
 	### 语法 ###
 
@@ -351,8 +351,8 @@ xui.fn = xui.prototype = {
 	- fn `函数` 回调函数，每个元素对其进行一次调用
 
 		    // `element` 当前元素
-		    // `index` 当前元素在XUI集合中的序号
-		    // `xui` XUI集合
+		    // `index` 当前元素在xui集合中的序号
+		    // `xui` xui集合
 		    function( element, index, xui ) {
 		        // `this` 当前元素
 		    }
