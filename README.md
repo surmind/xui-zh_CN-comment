@@ -1,9 +1,9 @@
 xui-zh_CN-comment
 =================
 
-xui是一个用于开发手机网络应用的，极其轻量、易用、微小、模块化的javascript框架。是的，压缩后的代码_非常微小_。你可以在[http://xuijs.com](http://xuijs.com)找到更多的相关信息、下载和文档。
+xui是一个用于开发手机网络应用的，极其轻量、易用、模块化的javascript框架。压缩后的代码体积_非常小_。你可以在[http://xuijs.com](http://xuijs.com)找到更多的相关信息，以及下载和文档。
 
-xui-zh_CN-comment是一个基于xui的翻译项目，致力于将xui中的注释翻译成中文，并用joDoc生成完整的中文文档。
+xui-zh_CN-comment是一个基于xui的翻译项目，致力于将xui中的注释翻译成中文，并用joDoc生成完整的中文文档。在线版本的中文文档请看这里[http://xuijs.bnlt.org](http://xuijs.bnlt.org)
 
 获得中文注释的源代码
 --------------------
