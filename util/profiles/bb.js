@@ -1,5 +1,5 @@
 {
-    out: "lib/xui-bb-2.0.0.js",
+    out: "lib/xui-bb",
     include: [
         "src/header",
         "src/base",
@@ -10,6 +10,7 @@
         "src/js/xhr",
         "packages/emile/emile",
         "packages/sizzle/sizzle",
+        "packages/domready/ready",
         "src/footer"
     ]
 }

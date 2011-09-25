@@ -1,5 +1,5 @@
 {
-    out: "lib/xui-2.0.0.js",
+    out: "lib/xui",
     include: [
         "src/header",
         "src/base",
@@ -9,6 +9,7 @@
         "src/js/style",
         "src/js/xhr",
         "packages/emile/emile",
+        "packages/domready/ready",
         "src/footer"
     ]
 }

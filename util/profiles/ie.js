@@ -1,5 +1,5 @@
 {
-    out: "lib/xui-ie-2.0.0.js",
+    out: "lib/xui-ie",
     include: [
         "src/header",
         "src/base",
@@ -11,6 +11,7 @@
         "packages/emile/emile",
         "packages/sizzle/sizzle",
         "packages/split/split",
+        "packages/domready/ready",
         "src/footer"
     ]
 }

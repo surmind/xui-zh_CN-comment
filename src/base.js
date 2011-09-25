@@ -2,22 +2,22 @@
 	Basics
 	======
     
-    xui提供全局函数`x$`供开发者使用。该函数能以CSS选择器、DOM元素，以及由二者构成的数组为参数，
-    并返回一个xui对象。如：
+    xui提供了全局函数`x$`，能以CSS选择器、DOM元素或二者构成的数组为参数，
+    返回一个xui对象。如：
     
         var header = x$('#header'); // 返回id='header'的元素。
         
-    如果需要更多关于CSS选择器的信息，请访问[W3C specification](http://www.w3.org/TR/CSS2/selector.html)。请注意：w3c定义了不同级别的CSS选择器(包括Levels 1, 2 和 3)。
-    千万要注意！不同浏览器对CSS选择器的支持程度不同。
+    更多CSS选择器的信息，请访问[W3C specification](http://www.w3.org/TR/CSS2/selector.html)。请注意：w3c定义了不同级别的CSS选择器(等级1, 2 和 3)。
+    千万注意，不同浏览器对CSS选择器的支持程度不同。
     
-	本文档中所描述的函数都是xui对象中的方法，并且通常情况下这些方法都把xui集做为操作对象或返回值。
+	此文档中描述的函数都是xui对象的方法，并且在通常情况下，这些方法以xui集为操作对象或返回值。
 
 */
 var undefined,
     xui,
     window     = this,
     string     = new String('string'), // prevents Goog compiler from removing primative and subsidising out allowing us to compress further
-    document   = window.document,      // 显然
+    document   = window.document,      // 你懂的
     simpleExpr = /^#?([\w-]+)$/,   // for situations of dire need. Symbian and the such        
     idExpr     = /^#/,
     tagExpr    = /<([\w:]+)/, // 如此一来你就能通过类似 x$('<img href="/foo" /><strong>yay</strong>') 的方式动态地创建元素
@@ -53,13 +53,23 @@ function removex(array, from, to) {
     return array.push.apply(array, rest);
 }
 
+// 把CSS样式名转成DOM样式名，如：margin-left转成marginLeft
+function domstyle(name) {
+  return name.replace(/\-[a-z]/g,function(m) { return m[1].toUpperCase(); });
+}
+
+// 把DOM样式名转成CSS样式名，如：marginLeft转成margin-left
+function cssstyle(name) {
+  return name.replace(/[A-Z]/g, function(m) { return '-'+m.toLowerCase(); })
+}
+
 xui.fn = xui.prototype = {
 
 /**
 	extend
 	------
 
-	用另一个对象的成员来扩展xui的原型。
+	用其他对象的成员来扩展xui的原型。
 
 	### 语法 ###
 
@@ -71,7 +81,7 @@ xui.fn = xui.prototype = {
  
 	### 例子 ###
 
-	设有如下代码:
+	假设有以下代码:
 
 		var sugar = {
 		    first: function() { return this[0]; },
@@ -97,7 +107,7 @@ xui.fn = xui.prototype = {
 	find
 	----
 
-	选择和指定选择器匹配的元素。`x$`是`find`的一个别名。
+	找出和规则匹配的元素。`x$`是`find`的一个别名。
 
 	### 语法 ###
 
@@ -105,12 +115,12 @@ xui.fn = xui.prototype = {
 
 	### 参数 ###
 
-	- selector `字符串` 一个CSS选择器，作为匹配规则。
-	- context `HTMLElement` 被查询的父元素_(可选)_.
+	- selector `字符串` 一个CSS选择器，作为匹配用的规则。
+	- context `HTMLElement` 只在这个元素的后代中查询_(可选)_.
  
 	### 例子 ###
 
-	设有如下代码：
+	假设有以下代码：
 
 		<ul id="first">
 		    <li id="one">1</li>
@@ -137,7 +147,7 @@ xui.fn = xui.prototype = {
             }).reduce(ele);
         } else {
             context = context || document;
-            // 快速匹配纯ID选择器和基于标签名称的选择器
+            // 快速匹配基于ID和标签名称的选择器
             if (typeof q == string) {
               if (simpleExpr.test(q) && context.getElementById && context.getElementsByTagName) {
                   ele = idExpr.test(q) ? [context.getElementById(q.substr(1))] : context.getElementsByTagName(q);
@@ -236,7 +246,7 @@ xui.fn = xui.prototype = {
 
 	### 例子 ###
 
-	设有如下代码:
+	假设有以下代码:
 
 		<div>
 		    <div class="round">Item one</div>
@@ -299,7 +309,7 @@ xui.fn = xui.prototype = {
 	not
 	---
 
-	与`has`相反的函数。修改元素，返回所有 __不__ 匹配CSS选择器的结果.
+	与`has`相反的函数。返回与CSS选择器 __不__ 匹配的元素。
 
 	### 语法 ###
 
@@ -311,7 +321,7 @@ xui.fn = xui.prototype = {
 
 	### 例子 ###
 
-	设有如下代码:
+	假设有以下代码:
 
 		<div>
 		    <div class="round">Item one</div>
@@ -323,9 +333,13 @@ xui.fn = xui.prototype = {
 	我们可以使用 `not` 选择对象：
 
 		var divs     = x$('div');          // 得到全部的四个div元素。
-		var notRound = divs.not('.round'); // 得到那辆个class为 .square 和 .shadow 的元素。
+		var notRound = divs.not('.round'); // 得到那两个class为 .square 和 .shadow 的元素。
 */
     not: function(q) {
+        var list = slice(this),
+            omittedNodes = xui(q);
+        if (!omittedNodes.length) {
+            return this;
         var list = slice(this);
         return this.filter(function(i) {
             var found;

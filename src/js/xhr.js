@@ -41,6 +41,7 @@ xui.extend({
 		- method `字符串` 允许的值有 _get_, _put_, _delete_, _post_。默认为_get_.
 		- async `布尔` 启用同步请求。默认为 _false_.
 		- data `字符串` 一个url编码的字符串，包含了要发送的参数。
+        - error `函数` 在发生错误或响应状态不为200时执行 (例如回调函数执行失败).
 		- callback `函数` 在响应状态为200时执行 (例如成功时的回调函数)。
     - headers `对象` 一个JSON对象，由键值对组成，更改和获取请求头部的设置。
 
@@ -114,6 +115,9 @@ xui.extend({
               req.setRequestHeader(key, o.headers[key]);
             }
         }
+
+        // Set "X-Requested-With" header
+        req.setRequestHeader('X-Requested-With','XMLHttpRequest');
 
         req.handleResp = (o.callback != null) ? o.callback : function() { that.html(location, req.responseText); };
         req.handleError = (o.error && typeof o.error == 'function') ? o.error : function () {};

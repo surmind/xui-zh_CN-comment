@@ -101,18 +101,30 @@ xui.extend({
                     el.innerHTML = '';
                     el.appendChild(html);
                 }
-            } else if (location == "outer") { // .replaceWith
-                el.parentNode.replaceChild(wrapHelper(html, el), el);
-            } else if (location == "top") { // .prependTo
-                el.insertBefore(wrapHelper(html, el), el.firstChild);
-            } else if (location == "bottom") { // .appendTo
-                el.insertBefore(wrapHelper(html, el), null);
-            } else if (location == "remove") {
+            } else {
+              if (location == 'remove') {
                 el.parentNode.removeChild(el);
-            } else if (location == "before") { // .insertBefore
-                el.parentNode.insertBefore(wrapHelper(html, el.parentNode), el);
-            } else if (location == "after") { // .insertAfter
-                el.parentNode.insertBefore(wrapHelper(html, el.parentNode), el.nextSibling);
+              } else {
+                var elArray = ['outer', 'top', 'bottom'],
+                    wrappedE = wrapHelper(html, (elArray.indexOf(location) > -1 ? el : el.parentNode )),
+                    children = wrappedE.childNodes;
+                if (location == "outer") { // .replaceWith
+                  el.parentNode.replaceChild(wrappedE, el);
+                } else if (location == "top") { // .prependTo
+                    el.insertBefore(wrappedE, el.firstChild);
+                } else if (location == "bottom") { // .appendTo
+                    el.insertBefore(wrappedE, null);
+                } else if (location == "before") { // .insertBefore
+                    el.parentNode.insertBefore(wrappedE, el);
+                } else if (location == "after") { // .insertAfter
+                    el.parentNode.insertBefore(wrappedE, el.nextSibling);
+                }
+                var parent = wrappedE.parentNode;
+                while(children.length) {
+                  parent.insertBefore(children[0], wrappedE);
+                }
+                parent.removeChild(wrappedE);
+              }
             }
         });
     },
@@ -146,12 +158,17 @@ xui.extend({
     attr: function(attribute, val) {
         if (arguments.length == 2) {
             return this.each(function(el) {
-                (el.setAttribute?(attribute=='checked'&&(val==''||val==false||typeof val=="undefined"))?el.removeAttribute(attribute):el.setAttribute(attribute, val):0);
+                if (el.tagName == 'input' && attribute == 'value') el.value = val;
+                else if (el.setAttribute) {
+                  if (attribute == 'checked' && (val == '' || val == false || typeof val == "undefined")) el.removeAttribute(attribute);
+                  else el.setAttribute(attribute, val);
+                }
             });
         } else {
             var attrs = [];
             this.each(function(el) {
-                if (el.getAttribute) {
+                if (el.tagName == 'input' && attribute == 'value') attrs.push(el.value);
+                else if (el.getAttribute && el.getAttribute(attribute)) {
                     attrs.push(el.getAttribute(attribute));
                 }
             });
@@ -168,56 +185,18 @@ function getTag(el) {
 }
 
 function wrapHelper(html, el) {
-  return (typeof html == string) ? wrap(html, getTag(el)) : html;
+  if (typeof html == string) return wrap(html, getTag(el));
+  else { var e = document.createElement('div'); e.appendChild(html); return e; }
 }
 
 // 私有方法
 // 把html包在一个tag标签里，tag是可选的
 // 如果参数xhtml以一个tag作为开头，就将内容包含在那个tag中
 function wrap(xhtml, tag) {
-
-    var attributes = {},
-        re = /^<([A-Z][A-Z0-9]*)([^>]*)>([\s\S]*)<\/\1>/i,
-        element,
-        x,
-        a,
-        i = 0,
-        attr,
-        node,
-        attrList,
-        result;
-        
-    if (re.test(xhtml)) {
-        result = re.exec(xhtml);
-        tag = result[1];
-
-        // if the node has any attributes, convert to object
-        if (result[2] !== "") {
-            attrList = result[2].split(/([A-Z\-]*\s*=\s*['|"][A-Z0-9:;#\s]*['|"])/i);
-
-            for (; i < attrList.length; i++) {
-                attr = attrList[i].replace(/^\s*|\s*$/g, "");
-                if (attr !== "" && attr !== " ") {
-                    node = attr.split('=');
-                    attributes[node[0]] = node[1].replace(/(["']?)/g, '');
-                }
-            }
-        }
-        xhtml = result[3];
-    }
-
-    element = document.createElement(tag);
-
-    for (x in attributes) {
-        a = document.createAttribute(x);
-        a.nodeValue = attributes[x];
-        element.setAttributeNode(a);
-    }
-
-    element.innerHTML = xhtml;
-    return element;
+  var e = document.createElement('div');
+  e.innerHTML = xhtml;
+  return e;
 }
-
 
 /*
 * 从DOM中移除所有错误的节点，译注：看代码应该是移除了空的文本节点

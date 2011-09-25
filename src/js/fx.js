@@ -54,44 +54,45 @@ xui.extend({
 		x$('#box').tween([{left:'100px', backgroundColor:'green', duration:.2 }, { right:'100px' }]); 
 */
 	tween: function( props, callback ) {
-	    
-        // 创建一个options对象，用于emile
-	    var emileOpts = function(o) {
-	        var options = {};
-    		"duration after easing".split(' ').forEach( function(p) {
-        		if (props[p]) {
-        		    options[p] = props[p];
-        		    delete props[p];
-        		}
-    		});
-    		return options;
-	    }
-	    
-	    // 将properties序列化成一个用于emile的字符串
-	    var serialize = function(props) {
-		    var serialisedProps = [], key;
-    		if (typeof props != string) {
-      		    for (key in props) {
-                    serialisedProps.push(key + ':' + props[key]);
-    		    }
-      		    serialisedProps = serialisedProps.join(';');
-    		} else {
-    		    serialisedProps = props;
-    		}
-    		return serialisedProps;
-		};
-	    
-		// 排好队的动画
+
+    // 创建一个options对象，用于emile
+    var emileOpts = function(o) {
+      var options = {};
+      "duration after easing".split(' ').forEach( function(p) {
+        if (props[p]) {
+            options[p] = props[p];
+            delete props[p];
+        }
+      });
+      return options;
+    }
+
+    // 将properties序列化成一个用于emile的字符串
+    var serialize = function(props) {
+      var serialisedProps = [], key;
+      if (typeof props != string) {
+        for (key in props) {
+          serialisedProps.push(cssstyle(key) + ':' + props[key]);
+        }
+        serialisedProps = serialisedProps.join(';');
+      } else {
+        serialisedProps = props;
+      }
+      return serialisedProps;
+    };
+
+    // 排好队的动画
+    /* wtf is this?
 		if (props instanceof Array) {
 		    // animate each passing the next to the last callback to enqueue
 		    props.forEach(function(a){
-		        
+		      
 		    });
 		}
-
-        // 这个分支意味着我们在处理一个单一的补间
-	    var opts = emileOpts(props);
-	    var prop = serialize(props);
+    */
+    // 这个分支意味着我们在处理一个单一的补间
+    var opts = emileOpts(props);
+    var prop = serialize(props);
 		
 		return this.each(function(e){
 			emile(e, prop, opts, callback);

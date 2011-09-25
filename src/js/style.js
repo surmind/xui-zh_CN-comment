@@ -39,7 +39,7 @@ xui.extend({
 		x$('.button').setStyle('backgroundColor', '#EFEFEF');
 */
     setStyle: function(prop, val) {
-        prop = prop.replace(/\-[a-z]/g,function(m) { return m[1].toUpperCase(); });
+        prop = domstyle(prop);
         return this.each(function(el) {
             el.style[prop] = val;
         });
@@ -81,7 +81,7 @@ xui.extend({
             // this *can* be written to be smaller - see below, but in fact it doesn't compress in gzip as well, the commented
             // out version actually *adds* 2 bytes.
             // return document.defaultView.getComputedStyle(el, "").getPropertyValue(p.replace(/([A-Z])/g, "-$1").toLowerCase());
-            return document.defaultView.getComputedStyle(el, "").getPropertyValue(p.replace(/[A-Z]/g, function(m) { return '-'+m.toLowerCase(); }));
+            return document.defaultView.getComputedStyle(el, "").getPropertyValue(cssstyle(p));
         }
         if (callback === undefined) {
         	var styles = [];
@@ -98,7 +98,7 @@ xui.extend({
 
 	### 语法 ###
 
-		$( selector ).addClass( className );
+		x$( selector ).addClass( className );
 
 	### 参数 ###
 
@@ -106,7 +106,7 @@ xui.extend({
 
 	### 例子 ###
 
-		$('.foo').addClass('awesome');
+		x$('.foo').addClass('awesome');
 */
     addClass: function(className) {
         return this.each(function(el) {
@@ -124,7 +124,7 @@ xui.extend({
 
 	### 语法 ###
 
-		$( selector ).hasClass( className, fn );
+		x$( selector ).hasClass( className, fn );
 
 	### 参数 ###
 

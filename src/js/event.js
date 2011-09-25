@@ -2,7 +2,7 @@
 	Event
 	=====
 
-    用新方式处理事件
+    以全新的方式处理事件
 
 	- click
 	- load
@@ -23,7 +23,7 @@ xui.extend({
 	on
 	--
 
-    给元素集中的DOM事件注册一个回调函数。
+    给元素集的DOM事件注册一个回调函数。
 
 	### 语法 ###
 
@@ -200,6 +200,35 @@ xui.touch = (function () {
     return false;
   };
 })();
+
+/**
+	ready
+	----
+
+    DOM准备完毕时的事件
+
+	### 语法 ###
+
+		x$.ready(handler);
+
+	### 参数 ###
+
+	- handler `函数` 绑定在DOM准备完毕事件上的事件处理函数。
+
+	### example ###
+
+    x$.ready(function() {
+      alert('mah doms are ready');
+    });
+
+    xui.ready(function() {
+      console.log('ready, set, go!');
+    });
+
+*/
+xui.ready = function(handler) {
+  domReady(handler);
+}
 
 // 模仿Prototype的事件模型
 function _getEventID(element) {

@@ -6,10 +6,9 @@ if (typeof window.sessionStorage != 'undefined') window.sessionStorage.clear();
 
 function CoreTests() { return this; };
 CoreTests.prototype.run = function () {
-    // ---
-    /// base.js specs
-    // ---
-    
+  // ---
+  // base.js specs
+  // ---
     module("xui base (base.js)", {
         setup:function() {
             x = x$('ul#has_tests li');
@@ -28,11 +27,12 @@ CoreTests.prototype.run = function () {
             equals(x.has(".foo").length, 2, 'Should return number of elements after including a specific class as defined in markup');
         });
         test( '.not()', function(){
-            expect(1);
+            expect(2);
             equals(x.not(".foo").length, 3, 'Should return number of elements after omitting a specific class as defined in markup');
+            equals(x.not(".not_in_dom").length, 5, 'Should return all elements after omitting a specific class that doesn\'t exist');
         });
     
-    module("Base (base.js)", {
+    module("Selectors", {
         setup:function() {},
         teardown:function() {
             x = null;
@@ -244,7 +244,7 @@ CoreTests.prototype.run = function () {
               '<a href="#2" class="link_o">two link</a>' +
               '<a href="#3" class="link_o">three link</a>';
             bottom.html('bottom', numerousItems);
-            //equals(bottom[0].childNodes.length, numOriginalElements + 3, 'Should append numerous elements when passed as string');
+            equals(bottom[0].childNodes.length, numOriginalElements + 3, 'Should append numerous elements when passed as string');
         });
         test( 'Removing html elements via "remove"', function() {
             expect(2);
@@ -262,8 +262,8 @@ CoreTests.prototype.run = function () {
             }
         });
         test( '.html()', function(){
-            expect(4);
-            equals(h.html(), h[0].innerHTML, 'Should return innerHTML when called with no arguments');
+            expect(5);
+            equals(h.html()[0], h[0].innerHTML, 'Should return innerHTML when called with no arguments');
             
             var newListItem = "<li>\nHello\n</li>";
             x$("#html-list-test").html('bottom', newListItem);
@@ -277,10 +277,18 @@ CoreTests.prototype.run = function () {
             var myVideo = '<video src="myAwesomeVideo.mp4" id="my_video" autobuffer="" controls=""></video>';
             x$("#html-complex-test").html('inner', myVideo);
             equals(x$("#html-complex-test")[0].innerHTML, myVideo, 'Should properly insert complex DOM elements (like a video tag)');
+
+            // percent and periods in attributes when injecting HTML
+            var oldMarkup = x$('#html-list-test').html()[0];
+            var newMarkup = '<li id="help" style="width: 33.3333%;"> help </li>';
+            x$('#html-list-test').html('bottom', newMarkup);
+            equals(x$('#html-list-test')[0].innerHTML, oldMarkup + newMarkup, 'injecting html with attributes containing periods or percent signs should work');
+
+            
         });
         
         test('.attr()', function() {
-            expect(4);
+            expect(7);
             var checkbox = x$('#first-check');
             checkbox.attr('checked',true);
             equals(checkbox[0].checked, true, 'Should be able to check a checkbox-type input element');
@@ -296,6 +304,14 @@ CoreTests.prototype.run = function () {
             h.attr('width', '100px');
             equals(h[0].getAttribute('width'), '100px', 'Setting DOM element attribute with attr should work');
             ok(beforeAttr != h.attr('width'), 'Getting DOM element attribute should work also');
+            
+            var textInput = x$('#text_input');
+            var inputValueBefore = textInput.attr('value');
+            equals(inputValueBefore[0], "initial value", 'should existing string in input when calling attr() with one parameter.');
+            textInput.attr('value','some new value');
+            equals(textInput[0].value, 'some new value', 'using attr() to set value on text inputs should work.');
+            
+            equals(0, x$('#dom_tests').attr('non-existing').length, 'attr() on non-existing attributes should return xui objects of length 0');
         });
 
     // --
@@ -320,17 +336,17 @@ CoreTests.prototype.run = function () {
             x = null;
         }
     });
-    test( 'Asynchronous XHRs', function() {
-        QUnit.stop();
-        expect(2);
-        x.xhr("helpers/example.html", {
-            callback:function() {
-                ok(true, 'Specified callback function should be triggered properly');
-                equals(x$('#xhr-test-function')[0].innerHTML,'','Defined callback should override default behaviour of injecting response into innerHTML');
-                QUnit.start();
-            }
+        test( 'Asynchronous XHRs', function() {
+            expect(2);
+            QUnit.stop();
+            x.xhr("helpers/example.html", {
+                callback:function() {
+                    ok(true, 'Specified callback function should be triggered properly');
+                    equals(x$('#xhr-test-function')[0].innerHTML,'','Defined callback should override default behaviour of injecting response into innerHTML');
+                    QUnit.start();
+                }
+            });
         });
-    });
         test( 'Synchronous XHRs', function(){
             expect(1);
             x.xhr("helpers/example.html", {async:false});
@@ -347,8 +363,16 @@ CoreTests.prototype.run = function () {
             });
             equals(window.headers['foo'], 'bar', 'Should call setRequestHeader correctly');
         });
-        
-        
+
+        test( 'Should have X-Requested-With header set to XMLHttpRequest', function() {
+            expect(1);
+            x.xhr("helpers/example.html", {
+                headers: {
+                    'foo':'bar'
+                }
+            });
+            equals(window.headers['X-Requested-With'], 'XMLHttpRequest', 'Should set X-Requested-With header to "XMLHttpRequest"');
+        });
 
     // --
     /// fx specs
@@ -378,6 +402,27 @@ CoreTests.prototype.run = function () {
                 QUnit.start();
             });
         });
+        test( '.tween() with dom-style named CSS styles', function() {
+            QUnit.stop();
+            expect(2);
+            var el = x$('#square_dom');
+            el.tween({marginTop:'200px'}, function() {
+                ok(true, 'Callback should be called following tween');
+                equals(el[0].style.marginTop, '200px', 'Tweened property should be set to final value');
+                QUnit.start();
+            });
+        });
+        test( '.tween() with css-style named CSS styles', function() {
+            QUnit.stop();
+            expect(2);
+            var el = x$('#square_dom_two');
+            el.tween({'margin-left':'200px'}, function() {
+                ok(true, 'Callback should be called following tween');
+                equals(el[0].style.marginLeft, '200px', 'Tweened property should be set to final value');
+                QUnit.start();
+            });
+        });
+
 
     // --
     /// event specs
@@ -394,6 +439,11 @@ CoreTests.prototype.run = function () {
             x = null;
         }
     });
+        test('xui object should have a "ready" function', function() {
+            expect(2);
+            equals(typeof x$.ready, "function", "x$ should have the 'ready' function");
+            equals(typeof xui.ready, "function", "xui should have the 'ready' function");
+        });
         test('.on(event,function() { ... }) should bind anonymous function to selected element, and should be triggered by .fire(event) call', function () {
             QUnit.stop();
             expect(2);
@@ -513,5 +563,34 @@ CoreTests.prototype.run = function () {
                 ok(false, 'tripleclick bespoke event missing');
             }
         });
+
+        test('Should be able to fire keyboard events', function() {
+          QUnit.stop();
+          expect(1);
+          var i = document.createElement('input');
+          i.type = 'text';
+          i.onkeyup = function(e) { 
+            ok(true, "keyboard event should be fired.");
+            QUnit.start();
+          }
+          x.bottom(i);
+          i = x$(i);
+          i.fire('keyup');
+        });
+
+        test('Should be able to fire and trigger keyboard events via xui', function() {
+          QUnit.stop();
+          expect(1);
+          var i = document.createElement('input');
+          i.type = 'text';
+          i = x$(i);
+          i.on('keyup', function(e) { 
+            ok(true, "keyboard event should be fired.");
+            QUnit.start();
+          });
+          x.bottom(i);
+          i.fire('keyup');
+        });
+
     QUnit.start();
 }
